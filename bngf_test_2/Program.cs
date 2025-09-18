@@ -8,41 +8,23 @@ namespace bngf_test_2
 
         class Stat
         {
-            public Stat()
+            public string Name { get; set; } = "";
+            public dynamic Value { get; set; } = int.MinValue;
+
+            public string Position { get; set; } = "";
+
+            public bool Increase { get; set; } = true;
+
+            public bool CompareAndSet(dynamic value, string name, string position)
             {
-                Name = "";
-                Position = "";
-                Increase = true;
-                Value = 0;
-            }
-
-            public Stat(string name, string position, bool increase)
-            {
-                Name = name;
-                Position = position;
-                Increase = increase;
-            }
-
-            public string Name { get; set; }
-            public dynamic? Value { get; set; }
-
-            public string Position { get; set; }
-
-
-            public bool Increase { get; set; }
-
-            public void CompareAndSet(dynamic value, string name)
-            {
-                if ((value > Value) && (Increase))
+                if ((value > Value) == (Increase)) // возрастание(убывание) должно совпадать и там и там
                 {
                     Value = value;
                     Name = name;
+                    Position = position;
+                    return true;
                 }
-                else if ((value < Value) && (!Increase))
-                {
-                    Value = value;
-                    Name = name;
-                }
+                return false;
             }
         }
 
@@ -58,7 +40,6 @@ namespace bngf_test_2
 
         static void Main(string[] args)
         {
-
 
             string fileName = "Хоккеисты.csv";
             string filePath = Path.Combine(Environment.CurrentDirectory, fileName);
@@ -86,8 +67,7 @@ namespace bngf_test_2
                     String position = player[1];
                     int index = Array.IndexOf(columns, KeyByPosition[position]);
                     dynamic value = ParseString(player[index]);
-                    stat.CompareAndSet(value, name);
-                    stat.Position = position;
+                    stat.CompareAndSet(value, name, position);
 
 
                 }
